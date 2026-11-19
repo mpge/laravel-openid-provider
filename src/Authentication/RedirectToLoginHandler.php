@@ -22,8 +22,7 @@ class RedirectToLoginHandler implements ReauthenticationHandler
     public function __construct(
         private readonly AuthManager $auth,
         private readonly LoginRedirector $login,
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request, ReauthenticationRequest $reauthentication): Response
     {

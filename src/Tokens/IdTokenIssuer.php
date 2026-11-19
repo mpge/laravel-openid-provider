@@ -4,6 +4,7 @@ namespace Mpge\OpenIdProvider\Tokens;
 
 use DateTimeImmutable;
 use Illuminate\Contracts\Auth\Authenticatable;
+use InvalidArgumentException;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
@@ -19,8 +20,7 @@ class IdTokenIssuer
     public function __construct(
         private readonly KeyStore $keys,
         private readonly ClaimsResolver $claims,
-    ) {
-    }
+    ) {}
 
     /**
      * Issue a signed ID token.
@@ -31,6 +31,10 @@ class IdTokenIssuer
      */
     public function issue(Authenticatable $user, string $clientId, array $scopes, ?int $authTime, ?string $nonce): string
     {
+        if ($clientId === '') {
+            throw new InvalidArgumentException('An ID token needs a client ID.');
+        }
+
         $key = $this->keys->current();
 
         $configuration = Configuration::forAsymmetricSigner(

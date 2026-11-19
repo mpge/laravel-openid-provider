@@ -17,6 +17,5 @@ final class Grant
         public readonly ?string $nonce,
         public readonly ?int $authTime,
         public readonly bool $revoked,
-    ) {
-    }
+    ) {}
 }

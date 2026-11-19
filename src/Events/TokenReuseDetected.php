@@ -23,6 +23,5 @@ final class TokenReuseDetected
         public readonly string $grantId,
         public readonly string $clientId,
         public readonly ?string $userId,
-    ) {
-    }
+    ) {}
 }

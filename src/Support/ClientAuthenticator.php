@@ -18,9 +18,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ClientAuthenticator
 {
-    public function __construct(private readonly ClientRepository $clients)
-    {
-    }
+    public function __construct(private readonly ClientRepository $clients) {}
 
     /**
      * The authenticated client, or null when authentication fails.

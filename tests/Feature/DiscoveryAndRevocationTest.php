@@ -2,6 +2,7 @@
 
 namespace Mpge\OpenIdProvider\Tests\Feature;
 
+use Laravel\Passport\Client;
 use Mpge\OpenIdProvider\Tests\Concerns\InteractsWithOidc;
 use Mpge\OpenIdProvider\Tests\TestCase;
 
@@ -33,7 +34,7 @@ class DiscoveryAndRevocationTest extends TestCase
     }
 
     /**
-     * @return array{0: \Laravel\Passport\Client, 1: array<string, mixed>}
+     * @return array{0: Client, 1: array<string, mixed>}
      */
     private function issuedTokens(): array
     {

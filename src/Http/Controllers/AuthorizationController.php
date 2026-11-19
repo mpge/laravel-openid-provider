@@ -53,8 +53,7 @@ class AuthorizationController
         private readonly LoginRedirector $login,
         private readonly AuthManager $auth,
         private readonly ViewFactory $views,
-    ) {
-    }
+    ) {}
 
     /**
      * GET /oauth/authorize
@@ -64,7 +63,7 @@ class AuthorizationController
         try {
             $parameters = $this->validator->validate(
                 $request->query(),
-                (string) $request->server('QUERY_STRING', ''),
+                is_string($queryString = $request->server->get('QUERY_STRING')) ? $queryString : '',
             );
         } catch (UntrustedRedirectException $e) {
             return $this->errorPage($e->error, $e->description);
@@ -189,7 +188,7 @@ class AuthorizationController
 
         $this->pending->put($session, $pending->withConsentShownTo((string) $user->getAuthIdentifier()));
 
-        return response($this->views->make((string) config('openid-provider.consent.view', 'openid-provider::consent'), [
+        return response($this->views->make($this->view('consent.view', 'openid-provider::consent'), [
             'client' => $client,
             'user' => $user,
             'scopes' => Passport::scopesFor($parameters->scopes),
@@ -272,7 +271,13 @@ class AuthorizationController
 
         try {
             $authRequest = $this->server->validateAuthorizationRequest($psrRequest);
-            $authRequest->setUser(new PassportUser((string) $user->getAuthIdentifier()));
+            $userId = (string) $user->getAuthIdentifier();
+
+            if ($userId === '') {
+                return $this->redirectError($parameters, 'server_error', 'The signed-in user has no identifier.');
+            }
+
+            $authRequest->setUser(new PassportUser($userId));
             $authRequest->setAuthorizationApproved(true);
 
             $response = $this->server->completeAuthorizationRequest($authRequest, new PsrResponse);
@@ -312,7 +317,7 @@ class AuthorizationController
 
     private function errorPage(string $error, string $description): Response
     {
-        return response($this->views->make((string) config('openid-provider.error_view', 'openid-provider::error'), [
+        return response($this->views->make($this->view('error_view', 'openid-provider::error'), [
             'error' => $error,
             'description' => $description,
         ])->render(), 400, ['Cache-Control' => 'no-store']);
@@ -321,6 +326,21 @@ class AuthorizationController
     private function resumeUrl(PendingAuthorization $pending): string
     {
         return route('oidc.authorizations.continue', ['request' => $pending->id]);
+    }
+
+    /**
+     * A configured view name.
+     *
+     * @return view-string
+     */
+    private function view(string $key, string $default): string
+    {
+        $view = config("openid-provider.{$key}");
+
+        /** @var view-string $name Validated by the view factory when rendered. */
+        $name = is_string($view) && $view !== '' ? $view : $default;
+
+        return $name;
     }
 
     private function guard(): Guard

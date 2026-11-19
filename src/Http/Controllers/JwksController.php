@@ -14,9 +14,7 @@ use Mpge\OpenIdProvider\Keys\SigningKey;
  */
 class JwksController
 {
-    public function __construct(private readonly KeyStore $keys)
-    {
-    }
+    public function __construct(private readonly KeyStore $keys) {}
 
     /**
      * GET /.well-known/jwks.json

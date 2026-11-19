@@ -14,9 +14,7 @@ use Laravel\Passport\Passport;
  */
 class GrantRepository
 {
-    public function __construct(private readonly DatabaseManager $db)
-    {
-    }
+    public function __construct(private readonly DatabaseManager $db) {}
 
     /**
      * Record the grant created when an authorization code is issued.

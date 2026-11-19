@@ -30,9 +30,7 @@ class KeyStore
     /** @var array<string, SigningKey|null> */
     private array $loaded = [];
 
-    public function __construct(private readonly Filesystem $files)
-    {
-    }
+    public function __construct(private readonly Filesystem $files) {}
 
     /**
      * The key that signs new ID tokens. Throws when it cannot be read.

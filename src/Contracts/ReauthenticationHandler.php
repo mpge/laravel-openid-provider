@@ -3,6 +3,7 @@
 namespace Mpge\OpenIdProvider\Contracts;
 
 use Illuminate\Http\Request;
+use Mpge\OpenIdProvider\Authentication\AuthenticationTime;
 use Mpge\OpenIdProvider\Authentication\ReauthenticationRequest;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  * of the last authentication is unknown. The handler returns a response
  * (usually a redirect to a password or two-factor screen). Once the user has
  * proved who they are, the application must call
- * {@see \Mpge\OpenIdProvider\Authentication\AuthenticationTime::markAuthenticated()}
+ * {@see AuthenticationTime::markAuthenticated()}
  * (or log the user in again through the guard) and redirect to
  * {@see ReauthenticationRequest::$resumeUrl} to finish the authorization.
  *

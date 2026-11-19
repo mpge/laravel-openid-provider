@@ -28,12 +28,12 @@ class ClaimsResolver
         'iss', 'sub', 'aud', 'exp', 'iat', 'nbf', 'jti', 'auth_time', 'nonce', 'azp', 'at_hash', 'c_hash', 'acr', 'amr',
     ];
 
-    public function __construct(private readonly Container $container)
-    {
-    }
+    public function __construct(private readonly Container $container) {}
 
     /**
      * The subject identifier for a user.
+     *
+     * @return non-empty-string
      */
     public function subject(Authenticatable $user): string
     {
@@ -63,7 +63,7 @@ class ClaimsResolver
      * Resolve only the scope-based claims (no `sub`).
      *
      * @param  array<int, string>  $scopes
-     * @return array<string, mixed>
+     * @return array<non-empty-string, mixed>
      */
     public function scopeClaims(Authenticatable $user, array $scopes): array
     {
@@ -76,7 +76,7 @@ class ClaimsResolver
                 $value = $value->toArray();
             }
 
-            if ($value !== null) {
+            if ($value !== null && $claim !== '') {
                 $claims[$claim] = $value;
             }
         }

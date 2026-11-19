@@ -33,8 +33,7 @@ class TokenController
         private readonly EncryptedPayloadReader $payloads,
         private readonly IssuanceContext $context,
         private readonly ClientAuthenticator $clients,
-    ) {
-    }
+    ) {}
 
     /**
      * POST /oauth/token

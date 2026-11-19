@@ -25,8 +25,7 @@ final class AuthorizationParameters
         public readonly ?int $maxAge,
         public readonly ?string $codeChallenge,
         public readonly ?string $codeChallengeMethod,
-    ) {
-    }
+    ) {}
 
     /**
      * Whether the request is an OpenID Connect request (has the openid scope).

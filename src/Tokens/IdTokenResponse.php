@@ -32,7 +32,7 @@ class IdTokenResponse extends BearerTokenResponse
 
         $userId = $accessToken->getUserIdentifier();
 
-        if (! in_array('openid', $scopes, true) || $userId === null || $userId === '') {
+        if (! in_array('openid', $scopes, true) || $userId === null) {
             return [];
         }
 

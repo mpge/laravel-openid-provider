@@ -12,9 +12,7 @@ use Illuminate\Routing\Router;
  */
 class LoginRedirector
 {
-    public function __construct(private readonly Router $router)
-    {
-    }
+    public function __construct(private readonly Router $router) {}
 
     /**
      * Redirect to the login page, storing $resumeUrl as the intended URL.

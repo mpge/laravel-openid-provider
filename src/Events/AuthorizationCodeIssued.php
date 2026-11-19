@@ -16,6 +16,5 @@ final class AuthorizationCodeIssued
         public readonly string $clientId,
         public readonly string $userId,
         public readonly array $scopes,
-    ) {
-    }
+    ) {}
 }

@@ -31,6 +31,6 @@ class ClientLookup
 
         $client = $model->newQuery()->find($clientId);
 
-        return $client instanceof Client && ! $client->revoked ? $client : null;
+        return $client instanceof Client && ! $client->getAttribute('revoked') ? $client : null;
     }
 }

@@ -21,8 +21,7 @@ class UserInfoController
         private readonly AccessTokenValidator $tokens,
         private readonly UserResolver $users,
         private readonly ClaimsResolver $claims,
-    ) {
-    }
+    ) {}
 
     /**
      * GET|POST /oauth/userinfo

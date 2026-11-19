@@ -3,9 +3,11 @@
 namespace Mpge\OpenIdProvider\Tests\Feature;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Laravel\Passport\Passport;
 use Mpge\OpenIdProvider\Contracts\ClaimResolver;
 use Mpge\OpenIdProvider\Tests\Concerns\InteractsWithOidc;
 use Mpge\OpenIdProvider\Tests\TestCase;
+use Workbench\App\Models\User;
 
 class UserInfoTest extends TestCase
 {
@@ -14,7 +16,7 @@ class UserInfoTest extends TestCase
     /**
      * @return array<string, mixed>
      */
-    private function tokensFor(string $scope, ?\Workbench\App\Models\User $user = null): array
+    private function tokensFor(string $scope, ?User $user = null): array
     {
         $client = $this->createConfidentialClient();
         $this->skipConsentFor($client);
@@ -96,7 +98,7 @@ class UserInfoTest extends TestCase
                 'acme_username' => 'username',
             ],
         ]]);
-        \Laravel\Passport\Passport::tokensCan(array_merge(\Laravel\Passport\Passport::$scopes, ['acme_access' => 'Your Acme access level.']));
+        Passport::tokensCan(array_merge(Passport::$scopes, ['acme_access' => 'Your Acme access level.']));
 
         $user = $this->createUser(['username' => 'grace']);
         $tokens = $this->tokensFor('openid acme_access', $user);

@@ -16,8 +16,7 @@ final class PendingAuthorization
         public readonly int $requestedAt,
         /** The user shown the consent screen, once it has been shown. */
         public readonly ?string $consentUserId = null,
-    ) {
-    }
+    ) {}
 
     /**
      * A copy that records the consent screen was shown to a user.

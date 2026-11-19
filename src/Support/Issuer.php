@@ -11,6 +11,8 @@ final class Issuer
 {
     /**
      * The issuer identifier, without a trailing slash.
+     *
+     * @return non-empty-string
      */
     public static function identifier(): string
     {
@@ -24,7 +26,9 @@ final class Issuer
             throw new RuntimeException('openid-provider.issuer must not contain a query or fragment.');
         }
 
-        return rtrim($issuer, '/');
+        $issuer = rtrim($issuer, '/');
+
+        return $issuer !== '' ? $issuer : throw new RuntimeException('openid-provider.issuer must be an absolute URL.');
     }
 
     /**

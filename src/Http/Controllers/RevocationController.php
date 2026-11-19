@@ -30,8 +30,7 @@ class RevocationController
         private readonly EncryptedPayloadReader $payloads,
         private readonly AccessTokenValidator $accessTokens,
         private readonly GrantRepository $grants,
-    ) {
-    }
+    ) {}
 
     /**
      * POST /oauth/revoke

@@ -2,6 +2,7 @@
 
 namespace Mpge\OpenIdProvider\Tests\Feature;
 
+use Laravel\Passport\Passport;
 use Mpge\OpenIdProvider\Tests\Concerns\InteractsWithOidc;
 use Mpge\OpenIdProvider\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -127,7 +128,7 @@ class AuthorizationRequestValidationTest extends TestCase
         $tokens = $this->exchangeCode($client, $this->obtainCode($client, ['scope' => 'openid email made_up']))->assertOk()->json();
 
         $this->assertArrayHasKey('id_token', $tokens);
-        $this->assertSame(['openid', 'email'], \Laravel\Passport\Passport::token()->newQuery()->firstOrFail()->scopes);
+        $this->assertSame(['openid', 'email'], Passport::token()->newQuery()->firstOrFail()->scopes);
     }
 
     public function test_unknown_scopes_are_refused_for_plain_oauth_requests(): void

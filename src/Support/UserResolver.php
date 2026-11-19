@@ -16,9 +16,7 @@ class UserResolver
 {
     private ?UserProvider $provider = null;
 
-    public function __construct(private readonly AuthManager $auth)
-    {
-    }
+    public function __construct(private readonly AuthManager $auth) {}
 
     /**
      * Find a user by the identifier stored in a token.

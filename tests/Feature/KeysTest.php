@@ -9,6 +9,8 @@ use Lcobucci\JWT\Validation\Validator;
 use Mpge\OpenIdProvider\Keys\KeyStore;
 use Mpge\OpenIdProvider\Tests\Concerns\InteractsWithOidc;
 use Mpge\OpenIdProvider\Tests\TestCase;
+use phpseclib4\Crypt\PublicKeyLoader;
+use phpseclib4\Math\BigInteger;
 
 class KeysTest extends TestCase
 {
@@ -47,9 +49,9 @@ class KeysTest extends TestCase
      */
     private function pemFromJwk(array $jwk): string
     {
-        $key = \phpseclib4\Crypt\PublicKeyLoader::load([
-            'n' => new \phpseclib4\Math\BigInteger(base64_decode(strtr($jwk['n'], '-_', '+/')), 256),
-            'e' => new \phpseclib4\Math\BigInteger(base64_decode(strtr($jwk['e'], '-_', '+/')), 256),
+        $key = PublicKeyLoader::load([
+            'n' => new BigInteger(base64_decode(strtr($jwk['n'], '-_', '+/')), 256),
+            'e' => new BigInteger(base64_decode(strtr($jwk['e'], '-_', '+/')), 256),
         ]);
 
         return (string) $key;

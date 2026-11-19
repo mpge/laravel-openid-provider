@@ -2,8 +2,10 @@
 
 namespace Mpge\OpenIdProvider\Concerns;
 
+use Mpge\OpenIdProvider\Contracts\OidcSubject;
+
 /**
- * Default {@see \Mpge\OpenIdProvider\Contracts\OidcSubject} implementation:
+ * Default {@see OidcSubject} implementation:
  * the model's primary key as a string.
  *
  * Override getOidcSubject() if the primary key may ever change (for example

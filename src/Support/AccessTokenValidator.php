@@ -18,8 +18,7 @@ class AccessTokenValidator
     public function __construct(
         private readonly ResourceServer $server,
         private readonly ClientLookup $clients,
-    ) {
-    }
+    ) {}
 
     /**
      * The token's attributes, or null when it is not valid. A token whose

@@ -54,18 +54,22 @@ final class SigningKey
 
     /**
      * The PEM encoded private key, for the JWT signer only.
+     *
+     * @return non-empty-string
      */
     public function privateKeyPem(): string
     {
-        return $this->privateKeyPem;
+        return $this->privateKeyPem !== '' ? $this->privateKeyPem : throw new RuntimeException('Empty signing key.');
     }
 
     /**
      * The PEM encoded public key.
+     *
+     * @return non-empty-string
      */
     public function publicKeyPem(): string
     {
-        return $this->publicKeyPem;
+        return $this->publicKeyPem !== '' ? $this->publicKeyPem : throw new RuntimeException('Empty public key.');
     }
 
     /**

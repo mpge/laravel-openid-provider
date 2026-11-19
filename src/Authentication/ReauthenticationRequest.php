@@ -30,6 +30,5 @@ final class ReauthenticationRequest
         public readonly ?int $maxAge,
         /** Unix time the user must have authenticated at or after. */
         public readonly int $authenticatedAfter,
-    ) {
-    }
+    ) {}
 }

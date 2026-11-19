@@ -21,9 +21,7 @@ class AuthorizationRequestValidator
     /** Prompt values this provider understands. */
     public const SUPPORTED_PROMPTS = ['none', 'login', 'consent', 'select_account'];
 
-    public function __construct(private readonly ClientLookup $clients)
-    {
-    }
+    public function __construct(private readonly ClientLookup $clients) {}
 
     /**
      * @param  array<string, mixed>  $query  The decoded query parameters.
@@ -115,7 +113,7 @@ class AuthorizationRequestValidator
 
         return new AuthorizationParameters(
             clientId: (string) $client->getKey(),
-            clientName: (string) $client->name,
+            clientName: (string) $client->getAttribute('name'),
             redirectUri: $redirectUri,
             scopes: $scopes,
             state: $state,
@@ -129,7 +127,7 @@ class AuthorizationRequestValidator
 
     private function isRegisteredRedirectUri(Client $client, string $redirectUri): bool
     {
-        foreach ((array) $client->redirect_uris as $registered) {
+        foreach ((array) $client->getAttribute('redirect_uris') as $registered) {
             if (is_string($registered) && $registered !== '' && hash_equals($registered, $redirectUri)) {
                 return true;
             }

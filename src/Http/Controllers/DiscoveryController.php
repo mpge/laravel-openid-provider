@@ -14,9 +14,7 @@ use Mpge\OpenIdProvider\Support\Issuer;
  */
 class DiscoveryController
 {
-    public function __construct(private readonly ClaimsResolver $claims)
-    {
-    }
+    public function __construct(private readonly ClaimsResolver $claims) {}
 
     /**
      * GET /.well-known/openid-configuration

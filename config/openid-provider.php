@@ -1,5 +1,9 @@
 <?php
 
+use Mpge\OpenIdProvider\Authentication\RedirectToLoginHandler;
+use Mpge\OpenIdProvider\Claims\Resolvers\EmailVerified;
+use Mpge\OpenIdProvider\Claims\Resolvers\UpdatedAt;
+
 /*
 |--------------------------------------------------------------------------
 | OpenID Provider configuration
@@ -142,14 +146,14 @@ return [
                 'given_name' => 'given_name',
                 'family_name' => 'family_name',
                 'preferred_username' => 'username',
-                'updated_at' => Mpge\OpenIdProvider\Claims\Resolvers\UpdatedAt::class,
+                'updated_at' => UpdatedAt::class,
             ],
         ],
         'email' => [
             'description' => 'Your email address.',
             'claims' => [
                 'email' => 'email',
-                'email_verified' => Mpge\OpenIdProvider\Claims\Resolvers\EmailVerified::class,
+                'email_verified' => EmailVerified::class,
             ],
         ],
     ],
@@ -162,6 +166,6 @@ return [
     'reauthentication' => [
         // The class bound to the ReauthenticationHandler contract when the
         // application has not bound its own.
-        'handler' => Mpge\OpenIdProvider\Authentication\RedirectToLoginHandler::class,
+        'handler' => RedirectToLoginHandler::class,
     ],
 ];

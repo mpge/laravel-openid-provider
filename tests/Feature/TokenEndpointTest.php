@@ -2,6 +2,7 @@
 
 namespace Mpge\OpenIdProvider\Tests\Feature;
 
+use Illuminate\Support\Once;
 use Laravel\Passport\ClientRepository;
 use Mpge\OpenIdProvider\Tests\Concerns\InteractsWithOidc;
 use Mpge\OpenIdProvider\Tests\TestCase;
@@ -72,7 +73,7 @@ class TokenEndpointTest extends TestCase
         $tokens = $this->exchangeCode($client, $this->obtainCode($client))->json();
 
         $client->forceFill(['revoked' => true])->save();
-        \Illuminate\Support\Once::flush();
+        Once::flush();
 
         $this->authorize($this->authorizationParams($client))->assertStatus(400)->assertSee('invalid_client');
         $this->exchangeCode($client, $code)->assertStatus(401)->assertJson(['error' => 'invalid_client']);
