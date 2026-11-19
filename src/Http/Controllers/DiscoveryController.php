@@ -36,11 +36,11 @@ class DiscoveryController
 
         $document = [
             'issuer' => Issuer::identifier(),
-            'authorization_endpoint' => route('passport.authorizations.authorize'),
-            'token_endpoint' => route('passport.token'),
-            'userinfo_endpoint' => route('oidc.userinfo'),
-            'jwks_uri' => route('oidc.jwks'),
-            'revocation_endpoint' => route('oidc.revoke'),
+            'authorization_endpoint' => $this->endpoint('passport.authorizations.authorize'),
+            'token_endpoint' => $this->endpoint('passport.token'),
+            'userinfo_endpoint' => $this->endpoint('oidc.userinfo'),
+            'jwks_uri' => $this->endpoint('oidc.jwks'),
+            'revocation_endpoint' => $this->endpoint('oidc.revoke'),
             'scopes_supported' => array_values(array_unique(array_merge(['openid'], array_keys(Passport::$scopes)))),
             'response_types_supported' => ['code'],
             'response_modes_supported' => ['query'],
@@ -62,5 +62,14 @@ class DiscoveryController
             'Cache-Control' => 'public, max-age=3600',
             'Access-Control-Allow-Origin' => '*',
         ], JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Endpoint URLs are built from the issuer, not from the incoming
+     * request, so they are stable behind proxies and load balancers.
+     */
+    private function endpoint(string $route): string
+    {
+        return Issuer::url(route($route, [], false));
     }
 }
