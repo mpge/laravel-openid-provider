@@ -1,0 +1,48 @@
+OpenID Foundation conformance suite results
+Date: 2026-11-19
+Package commit: 159392c
+Suite: release-v5.3.4 (registry.gitlab.com/openid/conformance-suite)
+Provider: workbench demo app, PHP 8.4, Laravel 13, Passport 13, behind TLS at https://op.openid.test
+Command: ./conformance/run.sh
+Runner exit status: 0 (no unexpected failures, warnings or skips)
+
+Results for [1] oidcc-basic-certification-test-plan with configuration /config/laravel-openid-provider.json:
+Test [1:1] oidcc-server[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 99 log entries - 51 SUCCESS 0 FAILURE, 0 WARNING, 2.6 seconds
+Test [1:2] oidcc-response-type-missing[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 63 log entries - 30 SUCCESS 0 FAILURE, 0 WARNING, 0.4 seconds
+Test [1:3] oidcc-userinfo-get[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 100 log entries - 52 SUCCESS 0 FAILURE, 0 WARNING, 1.0 seconds
+Test [1:4] oidcc-userinfo-post-header[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 101 log entries - 53 SUCCESS 0 FAILURE, 0 WARNING, 1.0 seconds
+Test [1:5] oidcc-userinfo-post-body[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 99 log entries - 51 SUCCESS 0 FAILURE, 0 WARNING, 1.0 seconds
+Test [1:6] oidcc-ensure-request-without-nonce-succeeds-for-code-flow[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 61 log entries - 26 SUCCESS 0 FAILURE, 0 WARNING, 0.5 seconds
+Test [1:7] oidcc-scope-profile[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result WARNING. 109 log entries - 54 SUCCESS 0 FAILURE, 1 WARNING, 1.0 seconds
+Test [1:8] oidcc-scope-email[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 109 log entries - 57 SUCCESS 0 FAILURE, 0 WARNING, 1.0 seconds
+Test [1:9] oidcc-scope-address[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result SKIPPED. 31 log entries - 15 SUCCESS 0 FAILURE, 0 WARNING, 0.1 seconds
+Test [1:10] oidcc-scope-phone[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result SKIPPED. 31 log entries - 15 SUCCESS 0 FAILURE, 0 WARNING, 0.1 seconds
+Test [1:11] oidcc-scope-all[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result SKIPPED. 31 log entries - 15 SUCCESS 0 FAILURE, 0 WARNING, 0.1 seconds
+Test [1:12] oidcc-alternate-happy-flow[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 109 log entries - 57 SUCCESS 0 FAILURE, 0 WARNING, 0.9 seconds
+Test [1:13] oidcc-display-page[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 90 log entries - 46 SUCCESS 0 FAILURE, 0 WARNING, 1.3 seconds
+Test [1:14] oidcc-display-popup[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 90 log entries - 46 SUCCESS 0 FAILURE, 0 WARNING, 3.8 seconds
+Test [1:15] oidcc-prompt-login[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result REVIEW. 158 log entries - 80 SUCCESS 0 FAILURE, 0 WARNING, 2.7 seconds
+Test [1:16] oidcc-prompt-none-not-logged-in[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 63 log entries - 32 SUCCESS 0 FAILURE, 0 WARNING, 0.2 seconds
+Test [1:17] oidcc-prompt-none-logged-in[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 148 log entries - 79 SUCCESS 0 FAILURE, 0 WARNING, 1.5 seconds
+Test [1:18] oidcc-max-age-1[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result REVIEW. 160 log entries - 82 SUCCESS 0 FAILURE, 0 WARNING, 3.8 seconds
+Test [1:19] oidcc-max-age-10000[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 151 log entries - 82 SUCCESS 0 FAILURE, 0 WARNING, 1.5 seconds
+Test [1:20] oidcc-ensure-request-with-unknown-parameter-succeeds[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 90 log entries - 46 SUCCESS 0 FAILURE, 0 WARNING, 0.9 seconds
+Test [1:21] oidcc-id-token-hint[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 149 log entries - 80 SUCCESS 0 FAILURE, 0 WARNING, 1.5 seconds
+Test [1:22] oidcc-login-hint[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 90 log entries - 47 SUCCESS 0 FAILURE, 0 WARNING, 0.9 seconds
+Test [1:23] oidcc-ui-locales[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 90 log entries - 47 SUCCESS 0 FAILURE, 0 WARNING, 0.9 seconds
+Test [1:24] oidcc-claims-locales[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 90 log entries - 47 SUCCESS 0 FAILURE, 0 WARNING, 0.9 seconds
+Test [1:25] oidcc-ensure-request-with-acr-values-succeeds[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result WARNING. 91 log entries - 47 SUCCESS 0 FAILURE, 1 WARNING, 0.9 seconds
+Test [1:26] oidcc-codereuse[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 100 log entries - 54 SUCCESS 0 FAILURE, 0 WARNING, 1.3 seconds
+Test [1:27] oidcc-codereuse-30seconds[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 107 log entries - 58 SUCCESS 0 FAILURE, 0 WARNING, 34.7 seconds
+Test [1:28] oidcc-ensure-registered-redirect-uri[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result REVIEW. 47 log entries - 22 SUCCESS 0 FAILURE, 0 WARNING, 0.1 seconds
+Test [1:29] oidcc-ensure-post-request-succeeds[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 89 log entries - 46 SUCCESS 0 FAILURE, 0 WARNING, 1.0 seconds
+Test [1:30] oidcc-server-client-secret-post[client_auth_type=client_secret_post][response_mode=default][response_type=code] FINISHED - result PASSED. 89 log entries - 45 SUCCESS 0 FAILURE, 0 WARNING, 0.9 seconds
+Test [1:31] oidcc-unsigned-request-object-supported-correctly-or-rejected-as-unsupported[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result SKIPPED. 56 log entries - 25 SUCCESS 0 FAILURE, 0 WARNING, 0.2 seconds
+Test [1:32] oidcc-claims-essential[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result WARNING. 104 log entries - 55 SUCCESS 0 FAILURE, 1 WARNING, 1.2 seconds
+Test [1:33] oidcc-ensure-request-object-with-redirect-uri[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result REVIEW. 49 log entries - 24 SUCCESS 0 FAILURE, 0 WARNING, 0.1 seconds
+Test [1:34] oidcc-refresh-token[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 222 log entries - 136 SUCCESS 0 FAILURE, 0 WARNING, 5.2 seconds
+Test [1:35] oidcc-ensure-request-with-valid-pkce-succeeds[client_auth_type=client_secret_basic][response_mode=default][response_type=code] FINISHED - result PASSED. 93 log entries - 47 SUCCESS 0 FAILURE, 0 WARNING, 0.9 seconds
+Overall totals: ran 36 test modules. Conditions: 1749 successes, 0 failures, 3 warnings. 76.6 seconds
+Results for [2] oidcc-config-certification-test-plan with configuration /config/laravel-openid-provider.json:
+Test [2:1] oidcc-discovery-endpoint-verification[client_registration=static_client][server_metadata=discovery] FINISHED - result PASSED. 48 log entries - 32 SUCCESS 0 FAILURE, 0 WARNING, 0.2 seconds
+Overall totals: ran 2 test modules. Conditions: 32 successes, 0 failures, 0 warnings. 0.2 seconds
