@@ -34,7 +34,9 @@ Foundation conformance suite instead of asking you to trust it. See
 | Signing key rotation | Two published keys at once, `openid-provider:rotate-keys` |
 | `prompt=none`, `prompt=login`, `prompt=consent`, `max_age` | Supported, with a re-authentication contract |
 | Token revocation (RFC 7009) | Supported |
-| Dynamic client registration, request objects, encrypted ID tokens, pairwise subjects, front and back-channel logout, RP-initiated logout, token introspection | Not supported |
+| Token introspection (RFC 7662) | Opt-in, `OPENID_PROVIDER_INTROSPECTION=true` |
+| RP-initiated logout | Opt-in, `OPENID_PROVIDER_LOGOUT=true` |
+| Dynamic client registration, request objects, encrypted ID tokens, pairwise subjects, front and back-channel logout | Not supported |
 
 ## Installation
 
@@ -44,6 +46,9 @@ php artisan vendor:publish --tag=passport-migrations
 php artisan migrate
 php artisan passport:keys
 ```
+
+Schedule `passport:purge` and `openid-provider:prune` to keep the token
+tables small (see [installation](docs/installation.md#8-schedule-cleanup)).
 
 The service provider is auto-discovered. It registers the package migrations
 (two small tables that track which tokens came from which authorization) and
@@ -81,6 +86,8 @@ Full steps, including the `api` guard and the login route, are in
 | `POST /oauth/token` | `passport.token` |
 | `GET, POST /oauth/userinfo` | `oidc.userinfo` |
 | `POST /oauth/revoke` | `oidc.revoke` |
+| `POST /oauth/introspect` (when enabled) | `oidc.introspect` |
+| `GET, POST /oauth/logout`, `POST /oauth/logout/confirm` (when enabled) | `oidc.logout`, `oidc.logout.confirm` |
 | `GET /.well-known/openid-configuration` | `oidc.discovery` |
 | `GET /.well-known/jwks.json` | `oidc.jwks` |
 
@@ -158,6 +165,8 @@ Run the command without options to see the current keys. See
 - [Scopes and claims](docs/scopes-and-claims.md)
 - [Re-authentication](docs/reauthentication.md)
 - [Key rotation runbook](docs/key-rotation.md)
+- [Token introspection](docs/introspection.md)
+- [RP-initiated logout](docs/logout.md)
 - [Security model and threat notes](docs/security.md)
 - [Moodle setup](docs/moodle.md)
 - [Conformance results](docs/conformance.md)

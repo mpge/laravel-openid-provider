@@ -168,4 +168,39 @@ return [
         // application has not bound its own.
         'handler' => RedirectToLoginHandler::class,
     ],
+
+    /*
+    | Token introspection (RFC 7662) at POST /oauth/introspect. Off by
+    | default. Only confidential clients can call it, and by default a client
+    | can only introspect its own tokens.
+    */
+    'introspection' => [
+        'enabled' => (bool) env('OPENID_PROVIDER_INTROSPECTION', false),
+
+        // Resource servers allowed to introspect tokens issued to other
+        // clients: caller client ID => [token owner client ID, ...]. This
+        // never lets a client revoke another client's tokens.
+        'allowed_clients' => [],
+    ],
+
+    /*
+    | RP-initiated logout (OpenID Connect RP-Initiated Logout 1.0) at
+    | GET/POST /oauth/logout. Off by default.
+    */
+    'logout' => [
+        'enabled' => (bool) env('OPENID_PROVIDER_LOGOUT', false),
+
+        // Allowed post_logout_redirect_uri values per client: client ID =>
+        // [exact URI, ...]. A client that is not listed may use its
+        // registered redirect URIs. Matching is exact.
+        'post_logout_redirect_uris' => [],
+
+        // Where the browser goes after a logout without a
+        // post_logout_redirect_uri. A route name or a path.
+        'redirect_to' => '/',
+
+        // The Blade view asking the user to confirm a logout that the
+        // provider cannot verify came from their own client.
+        'view' => 'openid-provider::logout',
+    ],
 ];

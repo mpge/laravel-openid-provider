@@ -172,3 +172,23 @@ Scopes used when an authorization request has no `scope` parameter.
 | `reauthentication.handler` | `Mpge\OpenIdProvider\Authentication\RedirectToLoginHandler` | Used when the application has not bound `Mpge\OpenIdProvider\Contracts\ReauthenticationHandler` itself. The default signs the user out and sends them to the login page. |
 
 See [reauthentication.md](reauthentication.md).
+
+## `introspection`
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `introspection.enabled` | `false` (`OPENID_PROVIDER_INTROSPECTION`) | Register `POST /oauth/introspect` (RFC 7662) and list it in discovery. |
+| `introspection.allowed_clients` | `[]` | Resource servers that may introspect other clients' tokens: caller client ID => list of token owner client IDs. Every client can always introspect its own tokens. |
+
+See [introspection.md](introspection.md).
+
+## `logout`
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `logout.enabled` | `false` (`OPENID_PROVIDER_LOGOUT`) | Register `GET, POST /oauth/logout` and `POST /oauth/logout/confirm` (RP-initiated logout) and list `end_session_endpoint` in discovery. |
+| `logout.post_logout_redirect_uris` | `[]` | Client ID => exact URIs allowed as `post_logout_redirect_uri`. Clients not listed may use their registered redirect URIs. |
+| `logout.redirect_to` | `/` | Route name or path the browser goes to after a logout without `post_logout_redirect_uri`. |
+| `logout.view` | `openid-provider::logout` | Blade view asking the user to confirm a logout that could not be verified. |
+
+See [logout.md](logout.md).

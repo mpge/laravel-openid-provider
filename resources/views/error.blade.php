@@ -1,7 +1,7 @@
 {{--
     Shown when an authorization request cannot be returned to the client,
     for example an unknown client_id or an unregistered redirect_uri.
-    Variables: $error (OAuth error code), $description.
+    Variables: $error (OAuth error code), $description, optional $title.
 --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -19,7 +19,7 @@
 </head>
 <body>
 <main>
-    <h1>{{ __('This sign-in request cannot be completed') }}</h1>
+    <h1>{{ $title ?? __('This sign-in request cannot be completed') }}</h1>
     <p>{{ $description }}</p>
     <p><code>{{ $error }}</code></p>
 </main>

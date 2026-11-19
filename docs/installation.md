@@ -133,6 +133,23 @@ https://id.example.com/oauth/authorize?response_type=code&client_id=CLIENT_ID&re
 
 See [clients-and-pkce.md](clients-and-pkce.md) for the token exchange.
 
+## 8. Schedule cleanup
+
+Passport keeps expired and revoked tokens until they are purged, and this
+package keeps one small grant row per authorization. Purge both regularly,
+for example in `routes/console.php`:
+
+```php
+use Illuminate\Support\Facades\Schedule;
+
+Schedule::command('passport:purge')->hourly();
+Schedule::command('openid-provider:prune')->daily();
+```
+
+`openid-provider:prune` removes grant rows only once their tokens and codes
+are gone and they are older than `--hours` (default 168, matching
+`passport:purge`).
+
 ## Routes and Passport
 
 The package calls `Passport::ignoreRoutes()` and registers its own
@@ -155,4 +172,5 @@ OpenID Connect requires the authorization endpoint to accept `POST`. The
 middleware (`ValidateCsrfToken` on Laravel 12, `PreventRequestForgery` on
 Laravel 13). The consent form posts to the same route and its CSRF token is
 checked by the controller instead. If your application replaces the CSRF
-middleware with its own subclass, add `oauth/authorize` to its `$except` list.
+middleware with its own subclass, add `oauth/authorize` to its `$except` list
+(and `oauth/logout` when [logout](logout.md) is enabled).

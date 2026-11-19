@@ -6,6 +6,20 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Token introspection (RFC 7662) at `POST /oauth/introspect`, off by
+  default. Confidential clients only; a client sees its own tokens unless
+  `introspection.allowed_clients` lets it see others.
+- RP-initiated logout at `GET, POST /oauth/logout`, off by default. Logs out
+  without asking only for a verified `id_token_hint` of the signed-in user;
+  otherwise a CSRF-protected, single-use confirmation. Post-logout redirects
+  must match an allowed URI exactly.
+- `openid-provider:prune` command that removes grant rows whose tokens and
+  codes have been purged.
+- `introspection_endpoint` and `end_session_endpoint` in discovery when the
+  endpoints are enabled.
+
 ## [0.1.0] - 2026-11-19
 
 First release. Checked with the OpenID Foundation conformance suite (Basic OP

@@ -8,9 +8,10 @@ the application's job. Report vulnerabilities privately as described in
 
 - **Small surface.** Only the authorization code flow, the
   `authorization_code`, `refresh_token` and `client_credentials` grants,
-  UserInfo, discovery, JWKS and revocation exist. Implicit and hybrid flows,
-  request objects, dynamic registration and logout endpoints are absent, not
-  disabled.
+  UserInfo, discovery, JWKS and revocation exist. Token introspection and
+  RP-initiated logout are opt-in: their routes are not registered unless
+  enabled. Implicit and hybrid flows, request objects, dynamic registration
+  and front- or back-channel logout are absent, not disabled.
 - **No home-made cryptography.** Tokens are signed, verified, encrypted and
   decrypted only by league/oauth2-server, Passport and lcobucci/jwt. The
   package's own code builds JSON Web Keys from OpenSSL key details and hashes
@@ -91,6 +92,26 @@ for tokens issued before the revocation.
 client has authenticated, so it cannot be used to test whether a token
 exists or belongs to someone else. A client can only revoke its own tokens.
 
+### Token introspection privacy
+
+When enabled, `/oauth/introspect` answers only authenticated confidential
+clients, and only about their own tokens unless
+`introspection.allowed_clients` grants more. Every token the caller may not
+see, and every unknown, expired or revoked token, gets the same
+`{"active": false}`. Tokens of a revoked client or a deleted user are never
+reported active.
+
+### Logout
+
+When enabled, `/oauth/logout` ends a session without asking only for a
+verified `id_token_hint` naming the signed-in user. Anything else needs a
+confirmation form with the CSRF token and a single-use challenge, so a
+third-party page cannot sign users out. `post_logout_redirect_uri` must match
+a URI allowed for the client exactly, otherwise an error page is shown and
+nothing is redirected, so the endpoint cannot be used as an open redirect.
+`HEAD` requests never sign out. The hint's signature is verified by
+lcobucci/jwt against the published keys.
+
 ### Claim leakage
 
 UserInfo releases only claims of scopes the token was granted, plus `sub`.
@@ -108,9 +129,10 @@ Unknown scopes are dropped, never granted.
 - **Keep `sub` stable.** Do not reuse primary keys, and override
   `getOidcSubject()` if they might change.
 - **Review clients** before creating them; there is no dynamic registration.
-- **Prune old rows** with `php artisan passport:purge`. Grant rows for purged
-  tokens are harmless but can be removed with a scheduled query on
-  `openid_provider_grants.created_at`.
+- **Prune old rows.** Schedule `php artisan passport:purge` and then
+  `php artisan openid-provider:prune`, which removes the package's grant rows
+  once their tokens and codes are gone (see
+  [installation.md](installation.md#8-schedule-cleanup)).
 - **Watch `TokenReuseDetected`** and investigate.
 
 ## Known limitations

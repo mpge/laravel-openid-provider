@@ -30,8 +30,8 @@ migration.
 
 | admin9 2.x | This package |
 | --- | --- |
-| `POST /oauth/introspect` (RFC 7662) | Not available in 0.1.0. Clients that call it need it to stay on admin9, or wait for introspection support. |
-| `GET, POST /oauth/logout` (RP-initiated logout) | Not available in 0.1.0. Clients that call it get a 404. |
+| `POST /oauth/introspect` (RFC 7662), always on | Same path and route name, off by default: set `OPENID_PROVIDER_INTROSPECTION=true`. No `username` in the response. See [introspection.md](introspection.md). |
+| `GET, POST /oauth/logout` (RP-initiated logout), always on | Same paths and route names, off by default: set `OPENID_PROVIDER_LOGOUT=true`. Expired hints are accepted; an unregistered `post_logout_redirect_uri` shows an error page instead of redirecting to `/`. See [logout.md](logout.md). |
 | Authentication freshness kept in Redis | Kept in the session. No Redis requirement. |
 | Host calls `AuthenticationRecorder::markAuthenticated()` after login | Every `Login` event on the configured guard records the time automatically. Call `AuthenticationTime::markAuthenticated()` only after a password or two-factor confirmation that does not log in again. |
 | `ReauthenticationHandler::redirect(Request, ReauthenticationChallenge)` | `ReauthenticationHandler::handle(Request, ReauthenticationRequest)`; see [reauthentication.md](reauthentication.md) |
@@ -39,9 +39,9 @@ migration.
 | ID token TTL `tokens.id_token_ttl` (900 seconds) | `id_token_ttl` (3600 seconds by default) |
 | Access and refresh token TTLs in `tokens.*` | Set them on Passport (below) |
 
-Check your clients first. If none of them calls `/oauth/introspect` or
-`/oauth/logout` (Moodle's `auth_oauth2` calls neither), the switch is
-invisible to them.
+Check your clients first. If any of them calls `/oauth/introspect` or
+`/oauth/logout`, enable that endpoint in step 3. Moodle's `auth_oauth2` calls
+neither.
 
 ## Step by step
 
@@ -96,7 +96,9 @@ and translate the claim settings:
 | `routes.token_middleware`, `routes.userinfo_middleware` | `routes.api_middleware` |
 | `routes.authorization_middleware` | `routes.web_middleware` |
 | `routes.discovery_middleware` | `routes.discovery_middleware` |
-| `post_logout_redirect_uris*`, `introspection_allowed_clients`, `freshness` | No equivalent |
+| `introspection_allowed_clients` | `introspection.allowed_clients` (same shape) |
+| `post_logout_redirect_uris` | `logout.post_logout_redirect_uris` (same shape: client ID => URIs) |
+| `post_logout_redirect_uris_supported`, `freshness` | No equivalent |
 
 Make sure every claim a client maps today is still released by the same
 scope, with the same value. Moodle, for instance, reads `given_name`,
@@ -139,7 +141,8 @@ the user out and sends them to the login page, which works without any code.
 ### 6. Verify on staging
 
 - `/.well-known/openid-configuration` has the same `issuer` and endpoint URLs.
-  `introspection_endpoint` and `end_session_endpoint` are no longer listed.
+  `introspection_endpoint` and `end_session_endpoint` are listed only if you
+  enabled them.
 - `/.well-known/jwks.json` lists the same `kid`, `n` and `e` as before.
 - Sign in through each client. Accounts must be matched, not duplicated.
 - UserInfo returns the same claims as before for the same token scopes.

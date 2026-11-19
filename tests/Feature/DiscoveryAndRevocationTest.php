@@ -33,6 +33,13 @@ class DiscoveryAndRevocationTest extends TestCase
         $this->assertArrayNotHasKey('introspection_endpoint', $document);
     }
 
+    public function test_introspection_and_logout_are_absent_unless_enabled(): void
+    {
+        $this->post('/oauth/introspect', ['token' => 'anything'])->assertNotFound();
+        $this->get('/oauth/logout')->assertNotFound();
+        $this->post('/oauth/logout/confirm')->assertNotFound();
+    }
+
     /**
      * @return array{0: Client, 1: array<string, mixed>}
      */

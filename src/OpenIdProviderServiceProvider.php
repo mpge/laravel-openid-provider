@@ -20,6 +20,7 @@ use Mpge\OpenIdProvider\Authentication\AuthenticationTime;
 use Mpge\OpenIdProvider\Bridge\AuthCodeRepository;
 use Mpge\OpenIdProvider\Bridge\RefreshTokenRepository;
 use Mpge\OpenIdProvider\Claims\ClaimsResolver;
+use Mpge\OpenIdProvider\Console\PruneCommand;
 use Mpge\OpenIdProvider\Console\RotateKeysCommand;
 use Mpge\OpenIdProvider\Contracts\ReauthenticationHandler;
 use Mpge\OpenIdProvider\Grants\GrantRepository;
@@ -98,7 +99,7 @@ class OpenIdProviderServiceProvider extends ServiceProvider
         $this->registerListeners();
 
         if ($this->app->runningInConsole()) {
-            $this->commands([RotateKeysCommand::class]);
+            $this->commands([RotateKeysCommand::class, PruneCommand::class]);
 
             $this->publishes([
                 __DIR__.'/../config/openid-provider.php' => config_path('openid-provider.php'),

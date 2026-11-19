@@ -3,6 +3,7 @@
 namespace Mpge\OpenIdProvider\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Passport;
 use Mpge\OpenIdProvider\Claims\ClaimsResolver;
 use Mpge\OpenIdProvider\Support\Issuer;
@@ -55,6 +56,16 @@ class DiscoveryController
             'request_uri_parameter_supported' => false,
             'authorization_response_iss_parameter_supported' => false,
         ];
+
+        // Optional endpoints are listed only when they are switched on.
+        if (Route::has('oidc.introspect')) {
+            $document['introspection_endpoint'] = $this->endpoint('oidc.introspect');
+            $document['introspection_endpoint_auth_methods_supported'] = ['client_secret_basic', 'client_secret_post'];
+        }
+
+        if (Route::has('oidc.logout')) {
+            $document['end_session_endpoint'] = $this->endpoint('oidc.logout');
+        }
 
         return new JsonResponse($document, 200, [
             'Cache-Control' => 'public, max-age=3600',

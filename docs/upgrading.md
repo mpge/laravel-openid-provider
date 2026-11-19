@@ -20,7 +20,7 @@ Things that are part of the public API:
 - the claim resolvers in `Mpge\OpenIdProvider\Claims\Resolvers`;
 - the events in `Mpge\OpenIdProvider\Events`;
 - configuration keys, route paths and route names;
-- the `openid-provider:rotate-keys` command.
+- the `openid-provider:rotate-keys` and `openid-provider:prune` commands.
 
 Classes marked `@internal` can change in any release.
 
@@ -33,6 +33,19 @@ Classes marked `@internal` can change in any release.
    copy for new keys. Missing keys fall back to the package defaults.
 5. If you published the views, compare them with the new versions.
 6. Check discovery and sign in through one client on staging.
+
+## Unreleased
+
+Nothing breaks. New, all opt-in:
+
+- Token introspection (`OPENID_PROVIDER_INTROSPECTION=true`) and
+  RP-initiated logout (`OPENID_PROVIDER_LOGOUT=true`). A published
+  configuration file without the new `introspection` and `logout` sections
+  gets the package defaults (both off); copy the sections from the package's
+  `config/openid-provider.php` only to change them.
+- `openid-provider:prune` for scheduled cleanup of grant rows; see
+  [installation.md](installation.md#8-schedule-cleanup).
+- The error view accepts an optional `$title`. Published copies keep working.
 
 ## 0.1.0
 
