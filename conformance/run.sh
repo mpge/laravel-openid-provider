@@ -4,7 +4,7 @@
 # certification plans) against the package's demo provider, entirely in
 # Docker, then removes every container and volume it created.
 #
-# Requirements: Docker with Compose v2, git, curl, about 4 GB of free memory,
+# Requirements: Docker with Compose v2, git, curl, at least 6 GB of free memory (override with MIN_FREE_GB),
 # and `composer install` already run in the repository (vendor/ is copied
 # into the provider container).
 #
@@ -17,16 +17,16 @@ SUITE_TAG="release-v5.3.4"
 BASIC_PLAN="oidcc-basic-certification-test-plan[server_metadata=discovery][client_registration=static_client]"
 CONFIG_PLAN="oidcc-config-certification-test-plan"
 CONFIG_FILE="/config/laravel-openid-provider.json"
-MIN_FREE_GB="${MIN_FREE_GB:-4}"
+MIN_FREE_GB="${MIN_FREE_GB:-6}"
 
 cd "$(dirname "$0")"
 export MSYS_NO_PATHCONV=1 # stop Git Bash on Windows rewriting /config paths
 
 free_gb() {
-    if [ -r /proc/meminfo ] && ! grep -qi microsoft /proc/version 2>/dev/null; then
-        awk '/MemAvailable/ { printf "%d", $2 / 1048576 }' /proc/meminfo
-    elif command -v powershell.exe >/dev/null 2>&1; then
+    if command -v powershell.exe >/dev/null 2>&1; then
         powershell.exe -NoProfile -Command "[int]((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory/1MB)" | tr -d '\r'
+    elif [ -r /proc/meminfo ] && grep -q MemAvailable /proc/meminfo; then
+        awk '/MemAvailable/ { printf "%d", $2 / 1048576 }' /proc/meminfo
     elif command -v vm_stat >/dev/null 2>&1; then
         vm_stat | awk '/Pages free/ { gsub("\\.", "", $3); printf "%d", $3 * 4096 / 1073741824 }'
     else
@@ -35,6 +35,7 @@ free_gb() {
 }
 
 available="$(free_gb)"
+available="${available:-0}"
 if [ "${available}" -lt "${MIN_FREE_GB}" ]; then
     echo "Only ${available} GB of memory free; at least ${MIN_FREE_GB} GB is needed. Aborting." >&2
     exit 1

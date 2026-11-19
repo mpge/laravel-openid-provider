@@ -4,9 +4,9 @@
 # container never writes into the working tree.
 set -eu
 
-mkdir -p /app
-cd /src
-tar --exclude=./.git --exclude=./conformance/.runtime --exclude=./moodle-smoke/.runtime -cf - . | (cd /app && tar -xf -)
+rm -rf /app
+cp -R /src /app
+rm -rf /app/.git /app/conformance/.runtime /app/moodle-smoke/.runtime
 cd /app
 
 if [ ! -f vendor/autoload.php ]; then

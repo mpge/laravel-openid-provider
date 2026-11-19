@@ -61,7 +61,7 @@ services:
       # Client two skips consent; client one always shows the consent screen.
       DEMO_SKIP_CONSENT_CLIENTS: 7b2c9d1e-5f4a-4e3b-8c6d-1a2b3c4d5e6f
     command: ["sh", "/src/conformance/op-entrypoint.sh"]
-    mem_limit: 512m
+    mem_limit: 768m
 
   # TLS termination for the provider, reachable as https://openid-op.
   op-tls:
