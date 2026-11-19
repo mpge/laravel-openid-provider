@@ -6,6 +6,12 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-19
+
+First release. Checked with the OpenID Foundation conformance suite (Basic OP
+and Config OP plans, no failures; see docs/conformance.md) and a Moodle 4.5
+sign-in smoke test (see docs/moodle.md).
+
 ### Added
 
 - Authorization endpoint for the authorization code flow only. Implicit and
@@ -40,3 +46,6 @@ uses [Semantic Versioning](https://semver.org/).
   admin9/laravel-oidc-server, and a migration guide.
 - Scripts that run the OpenID Foundation conformance suite (Basic OP and
   Config OP plans) and a Moodle sign-in smoke test against the demo app.
+
+[Unreleased]: https://github.com/mpge/laravel-openid-provider/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/mpge/laravel-openid-provider/releases/tag/0.1.0
