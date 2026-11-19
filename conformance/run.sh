@@ -88,6 +88,7 @@ docker compose exec -T op-tls wget -q --no-check-certificate -O - https://op.ope
 set +e
 docker compose run --rm runner sh -c "pip install --quiet --disable-pip-version-check --root-user-action=ignore httpx pyparsing && \
     python run-test-plan.py --export-dir /results --no-parallel --verbose \
+    --expected-failures-file /expected/warnings.json --expected-skips-file /expected/skips.json \
     '${BASIC_PLAN}' ${CONFIG_FILE} \
     '${CONFIG_PLAN}' ${CONFIG_FILE}" 2>&1 | tee .runtime/results/output.txt
 status=${PIPESTATUS[0]}

@@ -1,0 +1,26 @@
+[
+  {
+    "test-name": "oidcc-scope-address",
+    "variant": "*",
+    "configuration-filename": "*",
+    "comment": "address is not in scopes_supported; the scope is not configured in the demo app."
+  },
+  {
+    "test-name": "oidcc-scope-phone",
+    "variant": "*",
+    "configuration-filename": "*",
+    "comment": "phone is not in scopes_supported; the scope is not configured in the demo app."
+  },
+  {
+    "test-name": "oidcc-scope-all",
+    "variant": "*",
+    "configuration-filename": "*",
+    "comment": "Skipped by the suite because address and phone are not supported."
+  },
+  {
+    "test-name": "oidcc-unsigned-request-object-supported-correctly-or-rejected-as-unsupported",
+    "variant": "*",
+    "configuration-filename": "*",
+    "comment": "Request objects are out of scope (request_parameter_supported is false)."
+  }
+]

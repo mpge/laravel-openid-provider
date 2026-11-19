@@ -1,0 +1,29 @@
+[
+  {
+    "test-name": "oidcc-scope-profile",
+    "variant": "*",
+    "configuration-filename": "*",
+    "current-block": "",
+    "condition": "VerifyScopesReturnedInUserInfoClaims",
+    "expected-result": "warning",
+    "comment": "The demo user has no data for the optional profile claims middle_name, nickname, profile, picture, website, gender, birthdate, zoneinfo and locale. Claims without data are omitted, as OpenID Connect Core 5.4 allows."
+  },
+  {
+    "test-name": "oidcc-ensure-request-with-acr-values-succeeds",
+    "variant": "*",
+    "configuration-filename": "*",
+    "current-block": "Verify authorization endpoint response",
+    "condition": "ValidateIdTokenACRClaimAgainstAcrValuesRequest",
+    "expected-result": "warning",
+    "comment": "acr is not supported, so the 'SHOULD return acr' recommendation does not apply. The request itself succeeds."
+  },
+  {
+    "test-name": "oidcc-claims-essential",
+    "variant": "*",
+    "configuration-filename": "*",
+    "current-block": "",
+    "condition": "EnsureUserInfoContainsName",
+    "expected-result": "warning",
+    "comment": "The claims request parameter is not supported (claims_parameter_supported is false in discovery). With only the openid scope, name is correctly not released."
+  }
+]

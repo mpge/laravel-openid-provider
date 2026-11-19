@@ -85,6 +85,8 @@ services:
       - ./.runtime/suite:/suite:ro
       - ./.runtime/results:/results
       - ./config:/config:ro
+      - ./expected-warnings.json:/expected/warnings.json:ro
+      - ./expected-skips.json:/expected/skips.json:ro
     environment:
       CONFORMANCE_SERVER: https://localhost.emobix.co.uk:8443/
       CONFORMANCE_SERVER_MTLS: https://localhost.emobix.co.uk:8444/
