@@ -1,0 +1,86 @@
+# Moodle sign-in smoke test against the package's demo provider.
+#
+# Run with ./moodle-smoke/run.sh. Every container and volume is removed at
+# the end. The client secret below exists only inside this throwaway stack.
+
+name: openid-provider-moodle-smoke
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: moodle
+      POSTGRES_PASSWORD: moodle
+      POSTGRES_DB: moodle
+    tmpfs:
+      - /var/lib/postgresql/data
+    mem_limit: 512m
+
+  # Downloads Moodle 4.5 LTS into a volume and adds config.php.
+  moodle-code:
+    image: alpine:3.20
+    volumes:
+      - moodle_code:/code
+      - ./config.php:/smoke/config.php:ro
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        if [ ! -f /code/version.php ]; then
+          wget -qO- https://download.moodle.org/download.php/direct/stable405/moodle-latest-405.tgz | tar -xz --strip-components=1 -C /code
+        fi
+        cp /smoke/config.php /code/config.php
+        chmod -R a+rX /code
+    mem_limit: 256m
+
+  moodle:
+    image: moodlehq/moodle-php-apache:8.3
+    volumes:
+      - moodle_code:/var/www/html
+      - moodle_data:/var/www/moodledata
+      - ./setup-oauth2.php:/smoke/setup-oauth2.php:ro
+    environment:
+      SMOKE_CLIENT_ID: 5d0c8a6e-3f2b-4c1d-9e8f-7a6b5c4d3e2f
+      SMOKE_CLIENT_SECRET: moodle-smoke-secret-8c1e5a7f3b9d2e6a4c0f
+      SMOKE_ISSUER: http://op:8000
+    depends_on:
+      db:
+        condition: service_started
+      moodle-code:
+        condition: service_completed_successfully
+    mem_limit: 768m
+
+  # The demo provider over plain HTTP on the private network.
+  op:
+    image: php:8.4-cli
+    volumes:
+      - ..:/src:ro
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "false"
+      APP_KEY: base64:bW9vZGxlLXNtb2tlLW9ubHkta2V5LTMyLWJ5dGVzISE=
+      APP_URL: http://op:8000
+      OPENID_PROVIDER_ISSUER: http://op:8000
+      PHP_CLI_SERVER_WORKERS: "4"
+      DEMO_USER_EMAIL: ada@example.com
+      DEMO_USER_PASSWORD: correct-horse-battery
+      DEMO_CLIENTS: 5d0c8a6e-3f2b-4c1d-9e8f-7a6b5c4d3e2f|moodle-smoke-secret-8c1e5a7f3b9d2e6a4c0f|Moodle|http://moodle/admin/oauth2callback.php
+    command: ["sh", "/src/conformance/op-entrypoint.sh"]
+    mem_limit: 768m
+
+  # Drives a browser-like sign-in (cookies, forms, redirects) twice.
+  client:
+    image: python:3.12-slim
+    profiles: ["client"]
+    volumes:
+      - ./smoke.py:/smoke/smoke.py:ro
+    environment:
+      MOODLE_URL: http://moodle
+      USER_EMAIL: ada@example.com
+      USER_PASSWORD: correct-horse-battery
+    mem_limit: 256m
+
+volumes:
+  moodle_code:
+  moodle_data:
