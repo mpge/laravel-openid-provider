@@ -136,3 +136,9 @@ cat moodle-smoke/.runtime/result.txt
 The service is created through Moodle's own API
 (`core\oauth2\api::create_issuer`, which performs discovery like the admin
 form) in `moodle-smoke/setup-oauth2.php`.
+
+Moodle only accepts `https` service base URLs, so the stack serves the
+provider through a Caddy TLS proxy as `https://op.openid.test` and adds the
+proxy's private root certificate to Moodle's CA bundle
+(`moodledata/moodleorgca.crt`). It also clears Moodle's cURL blocked hosts
+and allowed ports, because the provider lives on a private Docker network.
