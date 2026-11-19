@@ -76,13 +76,13 @@ done
 
 echo "Waiting for the demo provider..."
 for _ in $(seq 1 90); do
-    if docker compose exec -T op-tls wget -q --no-check-certificate -O /dev/null https://openid-op/.well-known/openid-configuration 2>/dev/null; then
+    if docker compose exec -T op-tls wget -q --no-check-certificate -O /dev/null https://op.openid.test/.well-known/openid-configuration 2>/dev/null; then
         break
     fi
     sleep 2
 done
 
-docker compose exec -T op-tls wget -q --no-check-certificate -O - https://openid-op/.well-known/openid-configuration \
+docker compose exec -T op-tls wget -q --no-check-certificate -O - https://op.openid.test/.well-known/openid-configuration \
     > .runtime/results/discovery.json
 
 set +e

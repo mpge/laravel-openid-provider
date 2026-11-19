@@ -50,9 +50,9 @@ services:
     environment:
       APP_ENV: local
       APP_DEBUG: "false"
-      APP_KEY: base64:Y29uZm9ybWFuY2Utb25seS1rZXktMzItYnl0ZXMhIQ==
-      APP_URL: https://openid-op
-      OPENID_PROVIDER_ISSUER: https://openid-op
+      APP_KEY: base64:Y29uZm9ybWFuY2Utb25seS1hcHAta2V5LTMyYnl0ZXM=
+      APP_URL: https://op.openid.test
+      OPENID_PROVIDER_ISSUER: https://op.openid.test
       PHP_CLI_SERVER_WORKERS: "4"
       DEMO_USER_EMAIL: ada@example.com
       DEMO_USER_PASSWORD: correct-horse-battery
@@ -63,7 +63,7 @@ services:
     command: ["sh", "/src/conformance/op-entrypoint.sh"]
     mem_limit: 768m
 
-  # TLS termination for the provider, reachable as https://openid-op.
+  # TLS termination for the provider, reachable as https://op.openid.test.
   op-tls:
     image: caddy:2.8
     volumes:
@@ -71,7 +71,7 @@ services:
     networks:
       default:
         aliases:
-          - openid-op
+          - op.openid.test
     depends_on:
       - op
     mem_limit: 128m

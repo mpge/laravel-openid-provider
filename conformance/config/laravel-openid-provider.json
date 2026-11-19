@@ -2,7 +2,7 @@
   "alias": "laravel-openid-provider",
   "description": "mpge/laravel-openid-provider demo provider (Testbench workbench)",
   "server": {
-    "discoveryUrl": "https://openid-op/.well-known/openid-configuration"
+    "discoveryUrl": "https://op.openid.test/.well-known/openid-configuration"
   },
   "client": {
     "client_id": "3f6a8f4e-2b1c-4d7e-9a5f-0c1d2e3f4a5b",
@@ -15,12 +15,12 @@
   "browser": [
     {
       "comment": "sign in, approve consent if shown, reach the callback",
-      "match": "https://openid-op/oauth/authorize*",
+      "match": "https://op.openid.test/oauth/authorize*",
       "tasks": [
         {
           "task": "Login",
           "optional": true,
-          "match": "https://openid-op/login*",
+          "match": "https://op.openid.test/login*",
           "commands": [
             [
               "text",
@@ -46,7 +46,7 @@
         {
           "task": "Consent",
           "optional": true,
-          "match": "https://openid-op/oauth/authorize*",
+          "match": "https://op.openid.test/oauth/authorize*",
           "commands": [
             [
               "click",
@@ -75,12 +75,12 @@
       "browser": [
         {
           "comment": "the second authorization must show the login page again",
-          "match": "https://openid-op/oauth/authorize*",
+          "match": "https://op.openid.test/oauth/authorize*",
           "tasks": [
             {
               "task": "Login",
               "optional": true,
-              "match": "https://openid-op/login*",
+              "match": "https://op.openid.test/login*",
               "commands": [
                 [
                   "wait",
@@ -114,7 +114,7 @@
             {
               "task": "Consent",
               "optional": true,
-              "match": "https://openid-op/oauth/authorize*",
+              "match": "https://op.openid.test/oauth/authorize*",
               "commands": [
                 [
                   "click",
@@ -143,12 +143,12 @@
       "browser": [
         {
           "comment": "the second authorization must show the login page again",
-          "match": "https://openid-op/oauth/authorize*",
+          "match": "https://op.openid.test/oauth/authorize*",
           "tasks": [
             {
               "task": "Login",
               "optional": true,
-              "match": "https://openid-op/login*",
+              "match": "https://op.openid.test/login*",
               "commands": [
                 [
                   "wait",
@@ -182,7 +182,7 @@
             {
               "task": "Consent",
               "optional": true,
-              "match": "https://openid-op/oauth/authorize*",
+              "match": "https://op.openid.test/oauth/authorize*",
               "commands": [
                 [
                   "click",
@@ -211,11 +211,11 @@
       "browser": [
         {
           "comment": "expect an error page, never a redirect",
-          "match": "https://openid-op/oauth/authorize*",
+          "match": "https://op.openid.test/oauth/authorize*",
           "tasks": [
             {
               "task": "Expect redirect_uri error page",
-              "match": "https://openid-op/oauth/authorize*",
+              "match": "https://op.openid.test/oauth/authorize*",
               "commands": [
                 [
                   "wait",

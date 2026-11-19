@@ -6,7 +6,7 @@
 
 # TLS in front of the demo provider. The conformance suite requires every
 # endpoint to be https.
-openid-op {
+op.openid.test {
 	tls internal
 	reverse_proxy op:8000
 }

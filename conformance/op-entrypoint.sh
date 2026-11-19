@@ -5,8 +5,10 @@
 set -eu
 
 rm -rf /app
-cp -R /src /app
-rm -rf /app/.git /app/conformance/.runtime /app/moodle-smoke/.runtime
+mkdir -p /app
+for path in composer.json testbench.yaml config database resources routes src workbench vendor; do
+    cp -R "/src/${path}" "/app/${path}"
+done
 cd /app
 
 if [ ! -f vendor/autoload.php ]; then

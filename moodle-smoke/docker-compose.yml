@@ -59,7 +59,7 @@ services:
     environment:
       APP_ENV: local
       APP_DEBUG: "false"
-      APP_KEY: base64:bW9vZGxlLXNtb2tlLW9ubHkta2V5LTMyLWJ5dGVzISE=
+      APP_KEY: base64:bW9vZGxlLXNtb2tlLW9ubHktYXBwLWtleS0zMmJ5dGU=
       APP_URL: http://op:8000
       OPENID_PROVIDER_ISSUER: http://op:8000
       PHP_CLI_SERVER_WORKERS: "4"

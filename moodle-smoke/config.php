@@ -1,8 +1,9 @@
 <?php
+
 // Moodle configuration for the throwaway smoke-test stack only.
 unset($CFG);
 global $CFG;
-$CFG = new stdClass();
+$CFG = new stdClass;
 
 $CFG->dbtype = 'pgsql';
 $CFG->dblibrary = 'native';
@@ -23,4 +24,4 @@ $CFG->directorypermissions = 02777;
 $CFG->curlsecurityblockedhosts = '';
 $CFG->curlsecurityallowedport = '';
 
-require_once(__DIR__ . '/lib/setup.php');
+require_once __DIR__.'/lib/setup.php';
