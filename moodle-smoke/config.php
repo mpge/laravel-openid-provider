@@ -24,4 +24,8 @@ $CFG->directorypermissions = 02777;
 $CFG->curlsecurityblockedhosts = '';
 $CFG->curlsecurityallowedport = '';
 
+// Show full errors in the smoke-test logs.
+$CFG->debug = E_ALL;
+$CFG->debugdisplay = 1;
+
 require_once __DIR__.'/lib/setup.php';

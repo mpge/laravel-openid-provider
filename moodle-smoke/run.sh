@@ -52,16 +52,20 @@ sql() {
     docker compose exec -T db psql -U moodle -d moodle -tA -c "$1" | tr -d '\r'
 }
 
-docker compose up -d db moodle-code moodle op
+docker compose up -d db moodle-code moodle op op-tls
 
 echo "Waiting for the provider and Moodle..."
 for _ in $(seq 1 120); do
-    if docker compose exec -T moodle curl -sf -o /dev/null http://op:8000/.well-known/openid-configuration 2>/dev/null; then
+    if docker compose exec -T moodle curl -sfk -o /dev/null https://op.openid.test/.well-known/openid-configuration 2>/dev/null; then
         break
     fi
     sleep 3
 done
-docker compose exec -T moodle curl -sf http://op:8000/.well-known/openid-configuration > .runtime/discovery.json
+docker compose exec -T moodle curl -sfk https://op.openid.test/.well-known/openid-configuration > .runtime/discovery.json
+
+# Moodle's cURL reads its CA bundle from moodledata/moodleorgca.crt when present.
+# Add the TLS proxy's private root to the system bundle there.
+docker compose exec -T moodle sh -c 'cat /etc/ssl/certs/ca-certificates.crt /caddy/caddy/pki/authorities/local/root.crt > /var/www/moodledata/moodleorgca.crt && chown www-data /var/www/moodledata/moodleorgca.crt'
 
 echo "Installing Moodle..."
 docker compose exec -T -u www-data moodle php admin/cli/install_database.php \

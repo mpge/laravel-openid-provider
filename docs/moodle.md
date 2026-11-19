@@ -109,6 +109,17 @@ Log out of Moodle, open its login page and click the new button. The first
 sign-in creates a Moodle account (auth method `oauth2`, username = `sub`);
 every later sign-in, from any browser, logs in to the same account.
 
+## Smoke test result
+
+Latest run (2026-11-19, Moodle 4.5 LTS): **pass**. Moodle created the
+service from discovery, the first sign-in created one account (auth `oauth2`,
+username `1` = `sub`, first name, last name and email from UserInfo), and a
+second sign-in from a fresh browser logged in to the same account. Moodle
+sent `client_secret_post` without PKCE, exchanged the code and called
+UserInfo; it never requested the ID token's contents or a logout endpoint.
+Full output:
+[`moodle-smoke/results/2026-11-19-result.txt`](../moodle-smoke/results/2026-11-19-result.txt).
+
 ## Automated smoke test
 
 `moodle-smoke/run.sh` builds this exact setup in Docker (Moodle 4.5 LTS on

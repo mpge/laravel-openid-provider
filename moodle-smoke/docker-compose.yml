@@ -22,13 +22,21 @@ services:
     volumes:
       - moodle_code:/code
       - ./config.php:/smoke/config.php:ro
+    tmpfs:
+      - /tmp:size=300m
     command:
       - sh
       - -c
       - |
         set -e
         if [ ! -f /code/version.php ]; then
-          wget -qO- https://download.moodle.org/download.php/direct/stable405/moodle-latest-405.tgz | tar -xz --strip-components=1 -C /code
+          for attempt in 1 2 3 4 5; do
+            wget -q -O /tmp/moodle.tgz https://download.moodle.org/download.php/direct/stable405/moodle-latest-405.tgz && tar -tzf /tmp/moodle.tgz > /dev/null && break
+            echo "download attempt $$attempt failed, retrying"
+            sleep 5
+          done
+          tar -xzf /tmp/moodle.tgz --strip-components=1 -C /code
+          rm -f /tmp/moodle.tgz
         fi
         cp /smoke/config.php /code/config.php
         chmod -R a+rX /code
@@ -40,10 +48,11 @@ services:
       - moodle_code:/var/www/html
       - moodle_data:/var/www/moodledata
       - ./setup-oauth2.php:/smoke/setup-oauth2.php:ro
+      - caddy_data:/caddy:ro
     environment:
       SMOKE_CLIENT_ID: 5d0c8a6e-3f2b-4c1d-9e8f-7a6b5c4d3e2f
       SMOKE_CLIENT_SECRET: moodle-smoke-secret-8c1e5a7f3b9d2e6a4c0f
-      SMOKE_ISSUER: http://op:8000
+      SMOKE_ISSUER: https://op.openid.test
     depends_on:
       db:
         condition: service_started
@@ -51,7 +60,8 @@ services:
         condition: service_completed_successfully
     mem_limit: 768m
 
-  # The demo provider over plain HTTP on the private network.
+  # The demo provider. Moodle only accepts https issuers, so it is served
+  # through the same Caddy TLS proxy as the conformance run.
   op:
     image: php:8.4-cli
     volumes:
@@ -60,8 +70,8 @@ services:
       APP_ENV: local
       APP_DEBUG: "false"
       APP_KEY: base64:bW9vZGxlLXNtb2tlLW9ubHktYXBwLWtleS0zMmJ5dGU=
-      APP_URL: http://op:8000
-      OPENID_PROVIDER_ISSUER: http://op:8000
+      APP_URL: https://op.openid.test
+      OPENID_PROVIDER_ISSUER: https://op.openid.test
       PHP_CLI_SERVER_WORKERS: "4"
       DEMO_USER_EMAIL: ada@example.com
       DEMO_USER_PASSWORD: correct-horse-battery
@@ -69,13 +79,29 @@ services:
     command: ["sh", "/src/conformance/op-entrypoint.sh"]
     mem_limit: 768m
 
+  op-tls:
+    image: caddy:2.8
+    volumes:
+      - ../conformance/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    networks:
+      default:
+        aliases:
+          - op.openid.test
+    depends_on:
+      - op
+    mem_limit: 128m
+
   # Drives a browser-like sign-in (cookies, forms, redirects) twice.
   client:
     image: python:3.12-slim
     profiles: ["client"]
     volumes:
       - ./smoke.py:/smoke/smoke.py:ro
+      - caddy_data:/caddy:ro
     environment:
+      # Trust the TLS proxy's private root certificate.
+      REQUESTS_CA_BUNDLE: /caddy/caddy/pki/authorities/local/root.crt
       MOODLE_URL: http://moodle
       USER_EMAIL: ada@example.com
       USER_PASSWORD: correct-horse-battery
@@ -84,3 +110,4 @@ services:
 volumes:
   moodle_code:
   moodle_data:
+  caddy_data:

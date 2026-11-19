@@ -17,6 +17,7 @@ manager::set_user(get_admin());
 
 $issuer = api::create_issuer((object) [
     'name' => 'Laravel OpenID Provider',
+    'image' => '',
     'clientid' => getenv('SMOKE_CLIENT_ID'),
     'clientsecret' => getenv('SMOKE_CLIENT_SECRET'),
     'baseurl' => getenv('SMOKE_ISSUER'),

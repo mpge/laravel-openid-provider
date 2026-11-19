@@ -1,0 +1,19 @@
+Moodle smoke test result
+Date: 2026-11-19
+Package commit: 90f54b3 plus the smoke-test fixes committed with this file
+Moodle: 4.5 LTS (moodle-latest-405), moodlehq/moodle-php-apache:8.3, PostgreSQL 16
+Client: Moodle auth_oauth2 custom service, confidential, client_secret_post (basicauth off), no PKCE
+Command: ./moodle-smoke/run.sh
+
+== OAuth 2 service (created from discovery) ==
+issuer id: 1
+endpoints: discovery_endpoint=https://op.openid.test/.well-known/openid-configuration, authorization_endpoint=https://op.openid.test/oauth/authorize, token_endpoint=https://op.openid.test/oauth/token, userinfo_endpoint=https://op.openid.test/oauth/userinfo, revocation_endpoint=https://op.openid.test/oauth/revoke
+field mappings: address->address, nickname->alternatename, email->email, given_name->firstname, locale->lang, family_name->lastname, middle_name->middlename, phone->phone1, picture->picture, sub->username
+== First sign-in ==
+signed in as: Ada Lovelace
+oauth2 accounts after first sign-in: 1 (3 1 ada@example.com Ada Lovelace)
+== Second sign-in (fresh browser) ==
+signed in as: Ada Lovelace
+oauth2 accounts after second sign-in: 1 (3 1 ada@example.com Ada Lovelace)
+linked logins: 1
+RESULT: PASS (one account created, reused on the second sign-in)
