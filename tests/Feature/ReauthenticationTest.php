@@ -2,6 +2,7 @@
 
 namespace Mpge\OpenIdProvider\Tests\Feature;
 
+use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Mpge\OpenIdProvider\Authentication\AuthenticationTime;
 use Mpge\OpenIdProvider\Authentication\ReauthenticationRequest;
@@ -142,5 +143,21 @@ class ReauthenticationTest extends TestCase
         $this->withSession([AuthenticationTime::SESSION_KEY => ['user' => (string) $other->getKey(), 'time' => time()]]);
 
         $this->authorize($this->authorizationParams($client))->assertRedirect('/login');
+    }
+
+    public function test_login_records_auth_time_but_remember_me_restoration_does_not(): void
+    {
+        $user = $this->createUser();
+        $session = app('session.store');
+        $guard = auth()->guard('web');
+
+        event(new Login('web', $user, false));
+        $this->assertSame(time(), app(AuthenticationTime::class)->for($session, $user));
+
+        app(AuthenticationTime::class)->forget($session);
+        (fn () => $this->viaRemember = true)->call($guard);
+        event(new Login('web', $user, true));
+
+        $this->assertNull(app(AuthenticationTime::class)->for($session, $user));
     }
 }

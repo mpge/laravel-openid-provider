@@ -5,6 +5,7 @@ namespace Mpge\OpenIdProvider;
 use DateInterval;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
+use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Event;
@@ -139,11 +140,21 @@ class OpenIdProviderServiceProvider extends ServiceProvider
     private function registerListeners(): void
     {
         Event::listen(Login::class, function (Login $event): void {
-            if ($event->guard === config('openid-provider.guard', 'web') && $this->app->bound('session.store')) {
-                /** @var Session $session */
-                $session = $this->app->make('session.store');
-                $this->app->make(AuthenticationTime::class)->markAuthenticated($session, $event->user);
+            if ($event->guard !== config('openid-provider.guard', 'web') || ! $this->app->bound('session.store')) {
+                return;
             }
+
+            // Restoring a session from a "remember me" cookie is not an
+            // authentication, so it must not refresh auth_time.
+            $guard = $this->app->make('auth')->guard($event->guard);
+
+            if ($guard instanceof SessionGuard && $guard->viaRemember()) {
+                return;
+            }
+
+            /** @var Session $session */
+            $session = $this->app->make('session.store');
+            $this->app->make(AuthenticationTime::class)->markAuthenticated($session, $event->user);
         });
 
         Event::listen(Logout::class, function (Logout $event): void {
