@@ -121,7 +121,7 @@ class AuthorizationController
         $token = $request->input('_token') ?? $request->header('X-CSRF-TOKEN');
         $sessionToken = $request->session()->token();
 
-        if (! is_string($token) || ! is_string($sessionToken) || ! hash_equals($sessionToken, $token)) {
+        if (! is_string($token) || ! hash_equals($sessionToken, $token)) {
             return $this->errorPage('invalid_request', 'This consent form has expired. Please return to the application and try again.', 419);
         }
 
