@@ -1,0 +1,235 @@
+{
+  "alias": "laravel-openid-provider",
+  "description": "mpge/laravel-openid-provider demo provider (Testbench workbench)",
+  "server": {
+    "discoveryUrl": "https://openid-op/.well-known/openid-configuration"
+  },
+  "client": {
+    "client_id": "3f6a8f4e-2b1c-4d7e-9a5f-0c1d2e3f4a5b",
+    "client_secret": "conformance-secret-one-4f8a1c7e9b2d6f3a5c8e"
+  },
+  "client2": {
+    "client_id": "7b2c9d1e-5f4a-4e3b-8c6d-1a2b3c4d5e6f",
+    "client_secret": "conformance-secret-two-9e3b7d1f5a2c8e4b6d0f"
+  },
+  "browser": [
+    {
+      "comment": "sign in, approve consent if shown, reach the callback",
+      "match": "https://openid-op/oauth/authorize*",
+      "tasks": [
+        {
+          "task": "Login",
+          "optional": true,
+          "match": "https://openid-op/login*",
+          "commands": [
+            [
+              "text",
+              "id",
+              "email",
+              "ada@example.com",
+              "optional"
+            ],
+            [
+              "text",
+              "id",
+              "password",
+              "correct-horse-battery",
+              "optional"
+            ],
+            [
+              "click",
+              "id",
+              "submit"
+            ]
+          ]
+        },
+        {
+          "task": "Consent",
+          "optional": true,
+          "match": "https://openid-op/oauth/authorize*",
+          "commands": [
+            [
+              "click",
+              "id",
+              "approve"
+            ]
+          ]
+        },
+        {
+          "task": "Verify Complete",
+          "match": "*/test/*/callback*",
+          "commands": [
+            [
+              "wait",
+              "id",
+              "submission_complete",
+              10
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "override": {
+    "oidcc-prompt-login": {
+      "browser": [
+        {
+          "comment": "the second authorization must show the login page again",
+          "match": "https://openid-op/oauth/authorize*",
+          "tasks": [
+            {
+              "task": "Login",
+              "optional": true,
+              "match": "https://openid-op/login*",
+              "commands": [
+                [
+                  "wait",
+                  "xpath",
+                  "//*",
+                  10,
+                  "Sign in",
+                  "update-image-placeholder-optional"
+                ],
+                [
+                  "text",
+                  "id",
+                  "email",
+                  "ada@example.com",
+                  "optional"
+                ],
+                [
+                  "text",
+                  "id",
+                  "password",
+                  "correct-horse-battery",
+                  "optional"
+                ],
+                [
+                  "click",
+                  "id",
+                  "submit"
+                ]
+              ]
+            },
+            {
+              "task": "Consent",
+              "optional": true,
+              "match": "https://openid-op/oauth/authorize*",
+              "commands": [
+                [
+                  "click",
+                  "id",
+                  "approve"
+                ]
+              ]
+            },
+            {
+              "task": "Verify Complete",
+              "match": "*/test/*/callback*",
+              "commands": [
+                [
+                  "wait",
+                  "id",
+                  "submission_complete",
+                  10
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "oidcc-max-age-1": {
+      "browser": [
+        {
+          "comment": "the second authorization must show the login page again",
+          "match": "https://openid-op/oauth/authorize*",
+          "tasks": [
+            {
+              "task": "Login",
+              "optional": true,
+              "match": "https://openid-op/login*",
+              "commands": [
+                [
+                  "wait",
+                  "xpath",
+                  "//*",
+                  10,
+                  "Sign in",
+                  "update-image-placeholder-optional"
+                ],
+                [
+                  "text",
+                  "id",
+                  "email",
+                  "ada@example.com",
+                  "optional"
+                ],
+                [
+                  "text",
+                  "id",
+                  "password",
+                  "correct-horse-battery",
+                  "optional"
+                ],
+                [
+                  "click",
+                  "id",
+                  "submit"
+                ]
+              ]
+            },
+            {
+              "task": "Consent",
+              "optional": true,
+              "match": "https://openid-op/oauth/authorize*",
+              "commands": [
+                [
+                  "click",
+                  "id",
+                  "approve"
+                ]
+              ]
+            },
+            {
+              "task": "Verify Complete",
+              "match": "*/test/*/callback*",
+              "commands": [
+                [
+                  "wait",
+                  "id",
+                  "submission_complete",
+                  10
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "oidcc-ensure-registered-redirect-uri": {
+      "browser": [
+        {
+          "comment": "expect an error page, never a redirect",
+          "match": "https://openid-op/oauth/authorize*",
+          "tasks": [
+            {
+              "task": "Expect redirect_uri error page",
+              "match": "https://openid-op/oauth/authorize*",
+              "commands": [
+                [
+                  "wait",
+                  "xpath",
+                  "//*",
+                  10,
+                  "cannot be completed",
+                  "update-image-placeholder"
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
