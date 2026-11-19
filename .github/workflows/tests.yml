@@ -24,7 +24,7 @@ jobs:
             testbench: '^11.0'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -38,7 +38,7 @@ jobs:
           composer update --prefer-stable --prefer-dist --no-interaction --no-progress
 
       - name: Show versions
-        run: composer show laravel/framework laravel/passport league/oauth2-server lcobucci/jwt | grep -E '^(name|versions)'
+        run: composer show | grep -E '^(laravel/framework|laravel/passport|league/oauth2-server|lcobucci/jwt|orchestra/testbench) '
 
       - name: Run tests
         run: vendor/bin/phpunit
@@ -47,7 +47,7 @@ jobs:
     name: PHPStan, Pint and composer audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:
