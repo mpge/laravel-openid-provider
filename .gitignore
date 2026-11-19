@@ -1,0 +1,14 @@
+/vendor/
+/composer.lock
+/.phpunit.cache/
+/.phpunit.result.cache
+/build/
+/.idea/
+/.vscode/
+.DS_Store
+/workbench/storage/
+/workbench/.env
+/conformance/.runtime/
+/moodle-smoke/.runtime/
+*.key
+!/tests/fixtures/*.key
