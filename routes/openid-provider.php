@@ -30,7 +30,15 @@ Route::middleware((array) config('openid-provider.routes.web_middleware', ['web'
             ->name('passport.authorizations.authorize');
         Route::get('authorize/continue', [AuthorizationController::class, 'resume'])
             ->name('oidc.authorizations.continue');
+        // Also accepts authorization requests sent with POST, which arrive
+        // without a CSRF token. The consent form's token is checked in the
+        // controller instead.
         Route::post('authorize', [AuthorizationController::class, 'approve'])
+            ->withoutMiddleware(array_filter([
+                'Illuminate\Foundation\Http\Middleware\VerifyCsrfToken',
+                'Illuminate\Foundation\Http\Middleware\ValidateCsrfToken',
+                'Illuminate\Foundation\Http\Middleware\PreventRequestForgery',
+            ], 'class_exists'))
             ->name('passport.authorizations.approve');
         Route::delete('authorize', [AuthorizationController::class, 'deny'])
             ->name('passport.authorizations.deny');

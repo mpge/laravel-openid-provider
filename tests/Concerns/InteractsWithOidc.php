@@ -59,7 +59,7 @@ trait InteractsWithOidc
 
         if ($response->getStatusCode() === 200) {
             $token = $this->pendingAuthToken($response);
-            $response = $this->post('/oauth/authorize', ['auth_token' => $token]);
+            $response = $this->post('/oauth/authorize', ['auth_token' => $token, '_token' => session()->token()]);
         }
 
         $query = $this->redirectQuery($response);

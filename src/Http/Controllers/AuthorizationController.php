@@ -60,11 +60,22 @@ class AuthorizationController
      */
     public function authorize(Request $request): Response
     {
+        return $this->start(
+            $request,
+            $request->query->all(),
+            is_string($queryString = $request->server->get('QUERY_STRING')) ? $queryString : '',
+        );
+    }
+
+    /**
+     * Validate a new authorization request and start processing it.
+     *
+     * @param  array<string, mixed>  $input
+     */
+    private function start(Request $request, array $input, string $raw): Response
+    {
         try {
-            $parameters = $this->validator->validate(
-                $request->query(),
-                is_string($queryString = $request->server->get('QUERY_STRING')) ? $queryString : '',
-            );
+            $parameters = $this->validator->validate($input, $raw);
         } catch (UntrustedRedirectException $e) {
             return $this->errorPage($e->error, $e->description);
         } catch (AuthorizationException $e) {
@@ -93,10 +104,27 @@ class AuthorizationController
     }
 
     /**
-     * POST /oauth/authorize (consent approved)
+     * POST /oauth/authorize
+     *
+     * Either the consent form being approved (it carries auth_token), or an
+     * authorization request sent with POST, which OpenID Connect Core 3.1.2.1
+     * requires providers to accept. The route is excluded from Laravel's CSRF
+     * middleware for the second case, so the consent form's CSRF token is
+     * verified here instead.
      */
     public function approve(Request $request): Response
     {
+        if (! $request->request->has('auth_token')) {
+            return $this->start($request, $request->request->all(), (string) $request->getContent());
+        }
+
+        $token = $request->input('_token') ?? $request->header('X-CSRF-TOKEN');
+        $sessionToken = $request->session()->token();
+
+        if (! is_string($token) || ! is_string($sessionToken) || ! hash_equals($sessionToken, $token)) {
+            return $this->errorPage('invalid_request', 'This consent form has expired. Please return to the application and try again.', 419);
+        }
+
         return $this->decide($request, true);
     }
 
@@ -315,12 +343,12 @@ class AuthorizationController
         return new RedirectResponse($exception->toRedirectUrl(), 302, ['Cache-Control' => 'no-store']);
     }
 
-    private function errorPage(string $error, string $description): Response
+    private function errorPage(string $error, string $description, int $status = 400): Response
     {
         return response($this->views->make($this->view('error_view', 'openid-provider::error'), [
             'error' => $error,
             'description' => $description,
-        ])->render(), 400, ['Cache-Control' => 'no-store']);
+        ])->render(), $status, ['Cache-Control' => 'no-store']);
     }
 
     private function resumeUrl(PendingAuthorization $pending): string

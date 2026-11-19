@@ -46,13 +46,13 @@
             @csrf
             @method('DELETE')
             <input type="hidden" name="auth_token" value="{{ $authToken }}">
-            <button type="submit" class="deny">{{ __('Cancel') }}</button>
+            <button type="submit" id="deny" class="deny">{{ __('Cancel') }}</button>
         </form>
 
         <form method="post" action="{{ route('passport.authorizations.approve') }}">
             @csrf
             <input type="hidden" name="auth_token" value="{{ $authToken }}">
-            <button type="submit" class="approve">{{ __('Allow') }}</button>
+            <button type="submit" id="approve" class="approve">{{ __('Allow') }}</button>
         </form>
     </div>
 </main>

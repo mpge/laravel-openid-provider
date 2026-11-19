@@ -168,4 +168,45 @@ class AuthorizationCodeFlowTest extends TestCase
         $idToken = $this->parseJwt($this->exchangeCode($client, $query['code'])->json('id_token'));
         $this->assertEqualsWithDelta(time(), $idToken->claims()->get('auth_time'), 5);
     }
+
+    public function test_authorization_request_can_be_sent_with_post(): void
+    {
+        $user = $this->createUser();
+        $client = $this->createConfidentialClient();
+        $this->skipConsentFor($client);
+        $this->signIn($user);
+
+        $query = $this->redirectQuery($this->post('/oauth/authorize', $this->authorizationParams($client)));
+
+        $this->assertArrayHasKey('code', $query);
+        $this->assertSame('state-123', $query['state']);
+        $this->exchangeCode($client, $query['code'])->assertOk()->assertJsonStructure(['id_token']);
+    }
+
+    public function test_consent_approval_requires_the_csrf_token(): void
+    {
+        $user = $this->createUser();
+        $client = $this->createConfidentialClient();
+        $this->signIn($user);
+
+        $token = $this->pendingAuthToken($this->authorize($this->authorizationParams($client))->assertOk());
+
+        $this->post('/oauth/authorize', ['auth_token' => $token, '_token' => 'forged'])->assertStatus(419);
+        $this->post('/oauth/authorize', ['auth_token' => $token])->assertStatus(419);
+
+        // The genuine form still works afterwards.
+        $query = $this->redirectQuery($this->post('/oauth/authorize', ['auth_token' => $token, '_token' => session()->token()]));
+        $this->assertArrayHasKey('code', $query);
+    }
+
+    public function test_consent_cannot_be_approved_by_another_user(): void
+    {
+        $client = $this->createConfidentialClient();
+        $this->signIn($this->createUser());
+        $token = $this->pendingAuthToken($this->authorize($this->authorizationParams($client))->assertOk());
+
+        $this->signIn($this->createUser());
+
+        $this->post('/oauth/authorize', ['auth_token' => $token, '_token' => session()->token()])->assertStatus(400);
+    }
 }
