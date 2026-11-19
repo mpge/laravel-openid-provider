@@ -1,0 +1,36 @@
+laravel: '@testbench'
+
+providers:
+  - Laravel\Passport\PassportServiceProvider
+  - Mpge\OpenIdProvider\OpenIdProviderServiceProvider
+  - Workbench\App\Providers\WorkbenchServiceProvider
+
+migrations:
+  - workbench/database/migrations
+  - vendor/laravel/passport/database/migrations
+
+seeders:
+  - Workbench\Database\Seeders\DatabaseSeeder
+
+env:
+  - APP_NAME="OpenID Provider Demo"
+  - DB_CONNECTION=sqlite
+  - SESSION_DRIVER=file
+  - CACHE_STORE=file
+
+workbench:
+  start: '/'
+  install: true
+  health: false
+  discovers:
+    web: true
+    api: false
+    commands: false
+    components: false
+    views: true
+  build:
+    - create-sqlite-db
+    - db-wipe
+    - migrate-fresh
+  assets: []
+  sync: []
