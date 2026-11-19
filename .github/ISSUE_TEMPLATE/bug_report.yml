@@ -1,0 +1,42 @@
+name: Bug report
+description: Something does not work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security problems must not be reported here. Use private vulnerability reporting instead (see SECURITY.md).
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Package, Laravel, Passport and PHP versions.
+      placeholder: "laravel-openid-provider 0.1.0, Laravel 13.1, Passport 13.12, PHP 8.4"
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: Client (relying party)
+      description: Which client talks to the provider, and its version.
+      placeholder: "Moodle 4.5 auth_oauth2"
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The requests sent (remove secrets and tokens) or a failing test.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Include error responses. Never paste client secrets, tokens, codes or private keys.
+    validations:
+      required: true

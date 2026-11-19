@@ -1,0 +1,24 @@
+name: Feature request
+description: Suggest an addition or change.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The package implements a deliberately small part of OpenID Connect. Please check the supported and unsupported list in the README first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do, and which client or specification needs it?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: How it could work, including configuration and extension points.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
